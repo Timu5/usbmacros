@@ -1,6 +1,6 @@
 # USBMacros
 
-Simple tool to map second usb keyboards keys to some key combinations, useful everywhere you may need some extra buttons e.g. flight simulators.
+Simple tool to map second usb keyboard keys to some key combinations, useful everywhere you may need some extra buttons e.g. flight simulators.
 
 This tool exist as I couldn't find any tools that would work propertly with DCS.
 

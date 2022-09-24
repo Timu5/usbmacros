@@ -1,10 +1,27 @@
-USB_IF = 0  # Interface
+import yaml
+
 USB_TIMEOUT = 5  # Timeout in MS
 
-USB_VENDOR_ID = 0x1A2C
-USB_PRODUCT_ID = 0x0C23
+def load_config(filename):
+    with open(filename, "r") as content:
+        config = yaml.safe_load(content)
 
-KEY_STROKE_DELAY = 0.1  # s
+        devices = []
+        for device_id in config['devices']:
+            device = config['devices'][device_id]
+            devices.append(Device(device_id, device['name'], device['vid'], device['pid'], device['mappings']))
 
-mapping = {'shiftleft': ['ctrlleft', 'shiftleft', 'esc'],
-           'ctrlleft': ['ctrlleft', 'a']}
+        return Config(config.get("key_stroke_delay", None) or 0.1, devices)
+
+class Device:
+    def __init__(self, id, name, vid, pid, mappings):
+        self.id = id
+        self.name = name
+        self.vid = vid
+        self.pid = pid
+        self.mappings = mappings
+
+class Config:
+    def __init__(self, key_stroke_delay, devices):
+        self.key_stroke_delay = key_stroke_delay
+        self.devices = devices

@@ -1,0 +1,15 @@
+---
+key_stroke_delay: 0.01 # seconds
+devices:
+  keyboard1:
+    name: Example mappings
+    vid: 1A2C
+    pid: 0C23
+    mappings:
+      shiftleft:
+      - ctrlleft
+      - shiftleft
+      - esc
+      ctrlleft:
+      - ctrlleft
+      - a

@@ -17,9 +17,9 @@ Currently only one keyboard is supported.
 
 ## How to use
 
-Install WinUSB driver using zadig for specific keyboard, after that keyboard will no longer be detected as input device. 
+Install WinUSB driver using [zadig](https://zadig.akeo.ie/) for specific keyboard, after that keyboard will no longer be detected as input device. 
 
-Download latest release from https://github.com/Timu5/usbmacros/releases
+Download latest release from [releases](https://github.com/Timu5/usbmacros/releases).
 
 Modify config.yaml to match your needs, especialy keyboard vendor id, product id and mappings.
 

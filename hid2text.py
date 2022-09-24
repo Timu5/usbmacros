@@ -21,7 +21,6 @@ hid_mods = ['ctrlleft', 'shiftleft', 'altleft',
 
 def hid_code_to_string(code):
     if code >= 224:
-        print(code)
         return hid_mods[code - 224]
     return hid_codes[code]
 
@@ -31,3 +30,11 @@ def string_to_hid_code(string):
         return hid_codes.index(string)
     except:
         return hid_mods.index(string) + 224
+
+
+def mods_to_keys(mods):
+    result = []
+    for i in range(8):
+        if (mods & (1 << i)) > 0:
+            result.append(224 + i)
+    return result

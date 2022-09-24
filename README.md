@@ -11,18 +11,31 @@ It's directly communicating with usb keyboard by bypassing system HID keyboard d
 
 New inputs are send throught SendInput API.
 
+## Limitations
+
+Currently only one keyboard is supported.
+
 ## How to use
 
 Install WinUSB driver using zadig for specific keyboard, after that keyboard will no longer be detected as input device. 
+
+Download latest release from https://github.com/Timu5/usbmacros/releases
+
+Modify config.yaml to match your needs, especialy keyboard vendor id, product id and mappings.
+
+Run `usbmacro.exe`
+
+
+## How to run from source
 
 Install dependencies: 
 ```sh
 pip install pyusb libusb pydirectinput
 ```
 
-Modify config.py to match your needs, especialy mappings(see hid2tex.py for possible keys).
-
 Run as administrator:
-```
+```sh
 python usbmapper.py
 ```
+
+

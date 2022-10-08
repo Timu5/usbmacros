@@ -8,9 +8,10 @@ import config
 
 class USBMapper:
 
-    def __init__(self, config):
+    def __init__(self, config, device):
         self.key_down = []
         self.config = config
+        self.config_device = device
 
     def on_key_down(self, keys, device):
         for key in keys:
@@ -39,32 +40,44 @@ class USBMapper:
                 pydirectinput.keyUp(subkey)
                 time.sleep(self.config.key_stroke_delay)
 
-    def init(self, device):
+    def init(self):
+        device = self.config_device
         self.dev = usb.core.find(
             idVendor=int(device.vid, base=16), idProduct=int(device.pid, base=16))
         self.endpoint = self.dev[0][(0, 0)][0]
 
-    def loop(self, device):
+    def tick(self):
+        device = self.config_device
+        control = None
+
+        try:
+            control = self.dev.read(self.endpoint.bEndpointAddress,
+                                    self.endpoint.wMaxPacketSize, config.USB_TIMEOUT)
+        except usb.core.USBTimeoutError:
+            pass
+
+        if control != None:
+            mods = control[0]
+            keys = control[2:]
+            all_keys = hid2text.mods_to_keys(mods) + list(keys)
+            self.on_key_down(all_keys, device)
+            self.on_key_up(all_keys, device)
+
+    def loop(self):
         while True:
-            control = None
-
-            try:
-                control = self.dev.read(self.endpoint.bEndpointAddress,
-                                        self.endpoint.wMaxPacketSize, config.USB_TIMEOUT)
-            except usb.core.USBTimeoutError:
-                pass
-
-            if control != None:
-                mods = control[0]
-                keys = control[2:]
-                all_keys = hid2text.mods_to_keys(mods) + list(keys)
-                self.on_key_down(all_keys, device)
-                self.on_key_up(all_keys, device)
-
+            self.tick()
             time.sleep(0.01)
+
 
 if __name__ == "__main__":
     _config = config.load_config("config.yaml")
-    mapper = USBMapper(_config)
-    mapper.init(_config.devices[0])
-    mapper.loop(_config.devices[0])
+    mappers = []
+    for device in _config.devices:
+        mapper = USBMapper(_config, device)
+        mapper.init()
+        mappers.append(mapper)
+
+    while True:
+        for mapper in mappers:
+            mapper.tick()
+        time.sleep(0.01)
